@@ -9,17 +9,16 @@ export const getData = async () => {
   try {
     const client = await clientPromise;
     const db = await client.db();
-    const data = await db.collection('tasks').find({}).toArray();
+    const data = await db.collection('images').find({}).toArray();
     const images = await JSON.parse(JSON.stringify(data));
-    console.log(images);
-    return data;
+    return images;
   } catch (e) {
-    console.error(e);
+    console.log('eeeee:', e);
     return e?.message;
   }
 };
 
-export const uploadScreenshots = async (data, res) => {
+export const uploadScreenshots = async data => {
   try {
     const client = await clientPromise;
     const db = await client.db();
@@ -32,7 +31,7 @@ export const uploadScreenshots = async (data, res) => {
   }
 };
 
-export const deleteAll = async data => {
+export const deleteAll = async () => {
   try {
     const client = await clientPromise;
     const db = await client.db();
@@ -42,4 +41,12 @@ export const deleteAll = async data => {
   }
 };
 
-// deleteAll();
+export const replacePhotos = async data => {
+  try {
+    const client = await clientPromise;
+    const db = await client.db();
+    db.collection('images').replaceOne({}, { data, date: new Date() });
+  } catch (err) {
+    console.error('error !!!', err);
+  }
+};
