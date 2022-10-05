@@ -1,6 +1,13 @@
-import puppeteer from 'puppeteer';
+let puppeteer;
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  puppeteer = require('puppeteer-core');
+} else {
+  puppeteer = require('puppeteer');
+}
 
 const url = 'https://www.ceneo.pl/';
+
 //! change this to something else 😵🐊
 const item = 'rtx 3060';
 //! change this to something else 😵🐊
@@ -8,7 +15,8 @@ const item = 'rtx 3060';
 //! puppeteer
 export const getPrice = async () => {
   const browser = await puppeteer.launch({
-    // headless: false,
+    headless: true,
+    ignoreHTTPSErrors: true,
     defaultViewport: {
       width: 1920,
       height: 1080,
