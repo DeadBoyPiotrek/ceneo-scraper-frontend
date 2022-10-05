@@ -64,16 +64,17 @@ export const getPrice = async (req, res) => {
     await page.keyboard.press('Enter');
     await page.waitForSelector('.js_seoUrl');
     const photo1 = await page.screenshot({});
-    await page.click('.js_seoUrl');
-    await page.waitForTimeout(500);
-    const photo2 = await page.screenshot({});
+    // await page.click('.js_seoUrl');
+    // await page.waitForTimeout(500);
+    // const photo2 = await page.screenshot({});
     const photo1dot2 = await photo1.toString('base64');
-    const photo2dot2 = await photo2.toString('base64');
+    // const photo2dot2 = await photo1.toString('base64');
+
     // console.log(photo1, photo2, photo1dot2);
     // console.log(photo1dot2);
 
-    await browser.close();
-    return { photo1dot2, photo2dot2 };
+    // await browser.close();
+    return { photo1dot2, photo2dot2: photo1dot2 };
   } catch (error) {
     console.log(error);
     res.send(error.message);
