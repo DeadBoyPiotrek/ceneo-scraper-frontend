@@ -1,7 +1,8 @@
 let chrome = {};
 let puppeteer;
 
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+// if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+if (true) {
   chrome = require('chrome-aws-lambda');
   puppeteer = require('puppeteer-core');
 } else {
@@ -24,7 +25,8 @@ export const getPrice = async () => {
     },
   };
 
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  // if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  if (true) {
     options = {
       args: [...chrome.args, '--hide-scrollbars', '--disable-web-security'],
       defaultViewport: {
