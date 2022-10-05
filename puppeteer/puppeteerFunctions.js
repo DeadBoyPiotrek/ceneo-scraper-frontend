@@ -14,7 +14,7 @@ const url = 'https://www.ceneo.pl/';
 const item = 'rtx 3060';
 //! change this to something else 😵🐊
 
-export const getPrice = async () => {
+export const getPrice = async (req, res) => {
   let options = {
     defaultViewport: {
       width: 1920,
@@ -74,5 +74,8 @@ export const getPrice = async () => {
 
     await browser.close();
     return { photo1dot2, photo2dot2 };
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    res.send(error.message);
+  }
 };
