@@ -11,8 +11,18 @@ const PhotosPage = props => {
         <h1 style={{ textAlign: 'center' }}>
           Screenshots taken at {date.toLocaleString('pl-PL')}
         </h1>
-        <Image src={imageString1} alt="Red dot" width="1920" height="1080" />
-        <Image src={imageString2} alt="Red dot" width="1920" height="1080" />
+        <Image
+          src={imageString1}
+          alt={props.photo1}
+          width="1920"
+          height="1080"
+        />
+        <Image
+          src={imageString2}
+          alt={props.photo2}
+          width="1920"
+          height="1080"
+        />
       </div>
     );
   } else {
@@ -20,12 +30,12 @@ const PhotosPage = props => {
   }
 };
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   try {
     const images = await getData();
-
-    const photo1 = images[0].data.photo1dot2;
-    const photo2 = images[0].data.photo2dot2;
+    console.log('images', images);
+    const photo1 = images[0].data.photo1base64;
+    const photo2 = images[0].data.photo2base64;
     const date = images[0].date;
 
     return {

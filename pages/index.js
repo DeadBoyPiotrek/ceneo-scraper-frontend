@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -16,6 +17,9 @@ export default function Home() {
       >
         Create Ceneo Bot App
       </h1>
+      <div style={{ border: '1px solid black', display: 'inline-block' }}>
+        <Link href="/photos"> PhotosPage</Link>
+      </div>
     </div>
   );
 }
