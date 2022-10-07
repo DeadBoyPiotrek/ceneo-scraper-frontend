@@ -33,7 +33,7 @@ const PhotosPage = props => {
 export async function getServerSideProps() {
   try {
     const images = await getData();
-    console.log('images', images);
+    // console.log('images', images);
     const photo1 = images[0].data.photo1base64;
     const photo2 = images[0].data.photo2base64;
     const date = images[0].date;
