@@ -8,16 +8,17 @@
     "start": "next start",
     "lint": "next lint"
   },
-"engines": {
-  "node": "^14"
-},
+  "engines": {
+    "node": "^14"
+  },
   "dependencies": {
     "chrome-aws-lambda": "^6.0.0",
     "mongodb": "^4.10.0",
     "next": "12.3.1",
     "puppeteer-core": "^6.0.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "eslint": "8.24.0",
