@@ -1,8 +1,10 @@
-import Head from 'next/head';
+// import Head from 'next/head';
 import { getData } from '../mongodb/dbFunctions';
 import Image from 'next/image';
 import styled, { css } from 'styled-components';
 import Link from 'next/link';
+import { scrapeNowHandler } from '../helpers/helpersFunctions.js';
+import { getCollectionsNames } from '../mongodb/dbFunctions';
 const shadow = css`
   -webkit-box-shadow: 8px 8px 24px 0px rgba(24, 24, 24, 1);
   -moz-box-shadow: 8px 8px 24px 0px rgba(24, 24, 24, 1);
@@ -14,15 +16,14 @@ const Wrapper = styled.div`
   text-align: center;
   align-items: center;
   flex-direction: column;
-  flex-wrap: wrap;
   color: #2e2f35;
   padding: 20px;
   font-family: 'Montserrat', sans-serif;
 `;
 
-const Column = styled.div`
+const Columns = styled.div`
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
 `;
 
 const ItemSection = styled.div`
@@ -118,7 +119,7 @@ const OptionsDiv = styled.div`
     font: inherit;
   }
 `;
-export default function Home({ items }) {
+export default function Home({ items, collectionsNames }) {
   const itemsList = items.map((array, index) => {
     const dateScrapedDate = new Date(array[0].date);
     const dateScraped = dateScrapedDate.toLocaleString('pl-PL');
@@ -160,10 +161,16 @@ export default function Home({ items }) {
           <OptionsDiv>User Page / Edit products 👷</OptionsDiv>
         </Link>
         <OptionsDiv>
-          <button>Scrape Now 🤖</button>
+          <button
+            onClick={() => {
+              scrapeNowHandler(collectionsNames);
+            }}
+          >
+            Scrape Now 🤖
+          </button>
         </OptionsDiv>
       </Options>
-      <Column>{itemsList}</Column>
+      <Columns>{itemsList}</Columns>
     </Wrapper>
   );
 }
@@ -173,9 +180,10 @@ export async function getServerSideProps() {
     const data = await getData();
 
     const items = data;
+    const collectionsNames = await getCollectionsNames();
 
     return {
-      props: { items },
+      props: { items, collectionsNames },
     };
   } catch (err) {
     console.log('error', err);
