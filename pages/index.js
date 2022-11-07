@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components';
 import Link from 'next/link';
 import { scrapeNowHandler } from '../helpers/helpersFunctions.js';
 import { getCollectionsNames } from '../mongodb/dbFunctions';
+import { useUser } from '@auth0/nextjs-auth0';
 const shadow = css`
   -webkit-box-shadow: 8px 8px 24px 0px rgba(24, 24, 24, 1);
   -moz-box-shadow: 8px 8px 24px 0px rgba(24, 24, 24, 1);
@@ -24,6 +25,7 @@ const Wrapper = styled.div`
 const Columns = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const ItemSection = styled.div`
@@ -102,15 +104,49 @@ const Options = styled.div`
   gap: 20px;
 `;
 const OptionsDiv = styled.div`
+  position: relative;
   cursor: pointer;
   font-size: 18px;
   border-radius: 5px;
   padding: 10px;
   ${shadow}
   transition: all, cubic-bezier(0.075, 0.82, 0.165, 1), 0.1s;
+
+  &:before {
+    width: 100%;
+    height: 100%;
+    background: #2e2f35;
+    border-radius: 5px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    // center text vertically
+
+    justify-content: center;
+    align-items: center;
+    display: none;
+
+    cursor: auto;
+    content: 'Log in 🚔';
+  }
+
+  // add before element
+
   &:hover {
     transform: scale(1.05);
   }
+  // if props is true then add hover effect
+  ${props =>
+    props.user &&
+    css`
+      &:hover {
+        transform: scale(1);
+        &:before {
+          display: flex;
+        }
+      }
+    `}
 
   button {
     background: none;
@@ -120,6 +156,13 @@ const OptionsDiv = styled.div`
   }
 `;
 export default function Home({ items, collectionsNames }) {
+  const { user, error, isLoading } = useUser();
+
+  // if (user) {
+  //   // change OptionsDiv style to display: none
+  //   OptionsDiv.style.display = 'none';
+  // }
+
   const itemsList = items.map((array, index) => {
     const dateScrapedDate = new Date(array[0].date);
     const dateScraped = dateScrapedDate.toLocaleString('pl-PL');
@@ -157,10 +200,10 @@ export default function Home({ items, collectionsNames }) {
         Scraper
       </h1>
       <Options>
-        <Link href="/user-page">
-          <OptionsDiv>User Page / Edit products 👷</OptionsDiv>
-        </Link>
         <OptionsDiv>
+          <Link href="/user-page">User Page / Edit products 👷</Link>
+        </OptionsDiv>
+        <OptionsDiv user={!user}>
           <button
             onClick={() => {
               scrapeNowHandler(collectionsNames);
@@ -169,6 +212,16 @@ export default function Home({ items, collectionsNames }) {
             Scrape Now 🤖
           </button>
         </OptionsDiv>
+        {!user && (
+          <OptionsDiv>
+            <Link href="/api/auth/login">Log in 🤗</Link>
+          </OptionsDiv>
+        )}
+        {user && (
+          <OptionsDiv>
+            <Link href="/api/auth/logout">Log out 🫡</Link>
+          </OptionsDiv>
+        )}
       </Options>
       <Columns>{itemsList}</Columns>
     </Wrapper>

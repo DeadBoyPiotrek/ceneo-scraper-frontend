@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { getCollectionsNames } from '../mongodb/dbFunctions';
 import { deleteItemHandler, addItemHandler } from '../helpers/helpersFunctions';
 import { useState } from 'react';
+import { useUser } from '@auth0/nextjs-auth0';
 const Wrapper = styled.div`
   font-family: 'Montserrat', sans-serif;
   display: flex;
@@ -34,6 +35,35 @@ const WhiteBg = styled.div`
   padding: 10px;
   margin: 0 5px;
 `;
+const WhiteBgButton = styled(WhiteBg)`
+  background: white;
+  color: black;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 5px;
+  &:before {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 5px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+
+    content: '🚔';
+  }
+  ${props =>
+    props.user &&
+    css`
+      &:hover {
+        transform: scale(1);
+        &:before {
+          display: block;
+        }
+      }
+    `}
+`;
 const Button = styled.button`
   color: white;
   background: none;
@@ -48,8 +78,6 @@ const Button = styled.button`
   &:hover {
     transform: scale(1.3);
   }
-  // change visibility to none after click
-  // on click
 `;
 
 const Nav = styled.div`
@@ -69,14 +97,15 @@ const AddItem = styled.div`
   }
 `;
 
-const UserPage = props => {
+export default function UserPage(props) {
+  const { user, error, isLoading } = useUser();
   const [itemName, setItemName] = useState('');
   const [products, setProducts] = useState(props.items);
 
   const products2 = products.map((item, index) => (
     <Product key={index}>
       <WhiteBg>{item}</WhiteBg>
-      <WhiteBg>
+      <WhiteBgButton user={!user}>
         <Button
           onClick={() => {
             deleteItemHandler(item);
@@ -85,7 +114,7 @@ const UserPage = props => {
         >
           ❌
         </Button>
-      </WhiteBg>
+      </WhiteBgButton>
     </Product>
   ));
 
@@ -98,38 +127,35 @@ const UserPage = props => {
           placeholder="product name"
           onChange={e => setItemName(e.target.value)}
           type="text"
+          value={itemName}
         />
-        <WhiteBg>
+        <WhiteBgButton user={!user}>
           <Button
             onClick={() => {
               addItemHandler(itemName);
-              () => setItemName('');
+              setItemName('');
             }}
           >
             ✅
           </Button>
-        </WhiteBg>
+        </WhiteBgButton>
       </AddItem>
 
       <Nav>
         <Button>
           <Link href="/">Home Page</Link>
         </Button>
-        <Button>
-          <Link href="/api/auth/logout">Log Out </Link>
-        </Button>
       </Nav>
     </Wrapper>
   );
-};
+}
 
 export const getServerSideProps = async () => {
-  //TODO: get items data from db
   const items = await getCollectionsNames();
-  // console.log(items);
+
   return {
     props: { items },
   };
 };
 
-export default UserPage;
+// export default UserPage;

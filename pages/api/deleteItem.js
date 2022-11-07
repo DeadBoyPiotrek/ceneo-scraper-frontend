@@ -1,5 +1,6 @@
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import axios from 'axios';
-const handler = async (req, res) => {
+export default withApiAuthRequired(async function handler(req, res) {
   try {
     const name = req.body.name;
     await axios.post(`http://localhost:3000/deleteData`, {
@@ -10,6 +11,6 @@ const handler = async (req, res) => {
     res.json({ message: 'error' });
   }
   res.json({ message: 'success' });
-};
+});
 
-export default handler;
+// export default handler;
