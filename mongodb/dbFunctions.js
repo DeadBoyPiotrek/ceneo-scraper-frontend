@@ -10,7 +10,7 @@ export const getCollectionsNames = async () => {
   const db = client.db();
   const collections = await db.listCollections().toArray();
   const collectionsNames = collections.map(collection => collection.name);
-  // console.log('collectionsNames', collectionsNames);
+
   return collectionsNames;
 };
 
@@ -24,9 +24,9 @@ export const getData = async () => {
       const data2 = await db.collection(name).find({}).toArray();
       data.push(data2);
     }
-    // console.log('data', data);
+
     const dataJson = await JSON.parse(JSON.stringify(data));
-    // console.log('dataJson', dataJson);
+
     return dataJson;
   } catch (e) {
     console.log('error getting data:', e);
