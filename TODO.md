@@ -1,0 +1,5 @@
+- show loading spinner while waiting for data.
+- update item column when u get the data
+- add title 
+- add head 
+- for seo ? 
